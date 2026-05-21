@@ -1,7 +1,7 @@
 package SD_project.dance.Model;
 
 import jakarta.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,17 +16,21 @@ public class Studio {
     private String address;
     private String ownerName;
     private String color;
-    private String description;
-    //private List<Course> courses;
-
-    private Boolean hasImage;
     private String imagePath;
     private String logoPath;
+
+    @Column(length = 1000)
+    private String description;
+
     @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("studio-gallery")
     private List<StudioImage> gallery = new ArrayList<>();
 
-    // getters & setters
+    @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("studio-courses")
+    private List<Course> courses = new ArrayList<>();
 
+    // getters & setters
 
     public Long getId() {
         return id;
@@ -68,14 +72,6 @@ public class Studio {
         this.color = color;
     }
 
-    public Boolean getHasImage() {
-        return hasImage;
-    }
-
-    public void setHasImage(Boolean hasImage) {
-        this.hasImage = hasImage;
-    }
-
     public String getImagePath() {
         return imagePath;
     }
@@ -106,5 +102,13 @@ public class Studio {
 
     public void setGallery(List<StudioImage> gallery) {
         this.gallery = gallery;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

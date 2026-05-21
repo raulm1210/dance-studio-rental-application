@@ -1,5 +1,6 @@
 package SD_project.dance.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,8 +12,10 @@ public class StudioImage {
 
     private String imagePath;
 
+
     @ManyToOne
     @JoinColumn(name = "studio_id")
+    @JsonBackReference("studio-gallery")
     private Studio studio;
 
     // getters & setters

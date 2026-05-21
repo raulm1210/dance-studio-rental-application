@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class AppUser {
 
@@ -15,7 +18,14 @@ public class AppUser {
     private String email;
     private String password;
     private String role;
-
+    @ManyToMany
+    @JoinTable(
+            name = "user_booked_courses",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> bookedCourses = new ArrayList<>();
+    private String profileImagePath=null;
 
     // getters & setters
 
@@ -59,5 +69,19 @@ public class AppUser {
         this.username = username;
     }
 
+    public List<Course> getBookedCourses() {
+        return bookedCourses;
+    }
 
+    public void setBookedCourses(List<Course> bookedCourses) {
+        this.bookedCourses = bookedCourses;
+    }
+
+    public String getProfileImagePath() {
+        return profileImagePath;
+    }
+
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
+    }
 }

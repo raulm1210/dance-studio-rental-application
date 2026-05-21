@@ -1,10 +1,10 @@
 package SD_project.dance.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,15 +15,28 @@ public class Course {
     private Long id;
 
     private String name;
-    private Integer spots;
     private String instructorName;
-    private String description;
-    private Integer priceHour;
+    private String dayOfWeek;
+    private String startTime;
+    private Double pricePerHour;
+    private Integer enrolledPeople=0;
+    private Integer maxPeople;
     private String color;
-    private Boolean hasImage;
-    //private List<String> styles;
+    private String style;
 
-    // getters & setters
+    @Column(length = 1000)
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "studio_id")
+    @JsonBackReference("studio-courses")
+    private Studio studio;
+
+    @ManyToMany(mappedBy = "bookedCourses")
+    @JsonIgnore
+    private List<AppUser> bookedUsers = new ArrayList<>();
+
+    // getters and setters
 
 
     public Long getId() {
@@ -42,20 +55,36 @@ public class Course {
         this.name = name;
     }
 
-    public int getSpots() {
-        return spots;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setSpots(int spots) {
-        this.spots = spots;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getInstructorName() {
-        return instructorName;
+    public Double getPricePerHour() {
+        return pricePerHour;
     }
 
-    public void setInstructorName(String instructorName) {
-        this.instructorName = instructorName;
+    public void setPricePerHour(Double pricePerHour) {
+        this.pricePerHour = pricePerHour;
+    }
+
+    public Integer getMaxPeople() {
+        return maxPeople;
+    }
+
+    public void setMaxPeople(Integer maxPeople) {
+        this.maxPeople = maxPeople;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public String getDescription() {
@@ -66,11 +95,51 @@ public class Course {
         this.description = description;
     }
 
-    public int getPrice_hour() {
-        return priceHour;
+    public String getStyle() {
+        return style;
     }
 
-    public void setPrice_hour(int price_hour) {
-        this.priceHour = price_hour;
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    public Studio getStudio() {
+        return studio;
+    }
+
+    public void setStudio(Studio studio) {
+        this.studio = studio;
+    }
+
+    public String getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getInstructorName() {
+        return instructorName;
+    }
+
+    public void setInstructorName(String instructorName) {
+        this.instructorName = instructorName;
+    }
+
+    public Integer getEnrolledPeople() {
+        return enrolledPeople;
+    }
+
+    public void setEnrolledPeople(Integer enrolledPeople) {
+        this.enrolledPeople = enrolledPeople;
+    }
+
+    public List<AppUser> getBookedUsers() {
+        return bookedUsers;
+    }
+
+    public void setBookedUsers(List<AppUser> bookedUsers) {
+        this.bookedUsers = bookedUsers;
     }
 }

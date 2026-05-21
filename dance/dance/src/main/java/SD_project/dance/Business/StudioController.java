@@ -29,14 +29,14 @@ public class StudioController {
         this.studioImageRepo = studioImageRepo;
     }
 
-    // CREATE
+    // POST the add a studio information WITHOUT GALLERY !!!!
     @PostMapping
     public Studio createStudio(
+            //NAMES from here must match the names given to the formdata in FRONTEND !!!!
             @RequestParam("studio") String studioJson,
             @RequestParam(value = "image", required = false) MultipartFile image,
             @RequestParam(value = "logo", required = false) MultipartFile logo
     ) throws IOException {
-
         ObjectMapper mapper = new ObjectMapper();
 
         // 👇 convert JSON string back to object
@@ -52,7 +52,7 @@ public class StudioController {
             Files.copy(image.getInputStream(), uploadPath.resolve(fileName));
 
             studio.setImagePath(fileName);
-            studio.setHasImage(true);
+
         }
 
         if (logo != null && !logo.isEmpty()) {
@@ -69,6 +69,7 @@ public class StudioController {
         return studioRepo.save(studio);
     }
 
+    //POST THE GALLERY !!!!
     @PostMapping(value = "/{id}/gallery", consumes = "multipart/form-data")
     public List<StudioImage> uploadImages(
             @PathVariable Long id,
@@ -87,7 +88,7 @@ public class StudioController {
         for (MultipartFile file : files) {
             if (!file.isEmpty()) {
 
-                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                String fileName = System.currentTimeMillis() + "_gallery_" + file.getOriginalFilename();
                 Files.copy(file.getInputStream(), uploadPath.resolve(fileName));
 
                 StudioImage img = new StudioImage();
@@ -101,9 +102,16 @@ public class StudioController {
         return savedImages;
     }
 
-    // GET ALL
+    // GET information WITHOUT GALLERY !!!!
     @GetMapping
     public List<Studio> getStudios() {
         return studioRepo.findAll();
     }
+
+    @GetMapping("/{id}")
+    public Studio getStudioById(@PathVariable Long id) {
+        return studioRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Studio not found"));
+    }
+
 }
